@@ -1,0 +1,49 @@
+#sns-title {
+    z-index: 1;
+    position: fixed;
+}
+
+#contents {
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+.page__background {
+    background-color:#d80808;
+}
+
+div.footer-bk {
+    /*display:none;*/
+    position: fixed;       /* 絶対位置指定することを定義 */
+    bottom: 0px;              /* 絶対位置指定(左0px,下0px) */
+    background-color: #444;   /* 背景色(黒) */
+    width:100%;               /* 横の幅を100% */
+    height: 50px;            /* 縦の幅を120px */
+}
+/* フッターの表示領域 */
+div.footer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 70%;
+    width: 100%;
+    margin-left: 10px;
+    /*background: #888;*/
+}
+
+div.footer > input{
+    width: 80%;
+    float: left;
+}
+
+div.footer > .button {
+  background-color: rgba(4,4,4,0.2);
+}
+div.footer > .button:active {
+  background-color: rgba(4,4,4,0.2);
+}
+
+#msg {
+    color: #929599;
+}
