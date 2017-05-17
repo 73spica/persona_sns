@@ -41,38 +41,38 @@ module.controller('PageController', function($scope) {
     // 複数渡す必要がないので取り急ぎx,yにする
     $scope.drawLeftMsgForm = function(x,y) {
         var free = new createjs.Shape();
-          var frame = new createjs.Shape();
-          frame.graphics.beginFill("White");
-          frame.graphics.moveTo(x-6,y+5); //(45,302)座標から書き始める
-          frame.graphics.lineTo(x+14,y-18); //(73,274)まで辺を書く
-          frame.graphics.lineTo(x+18,y-13); // (77,282)
-          frame.graphics.lineTo(x+23,y-18); // (83,275)
-          frame.graphics.lineTo(x+24,y-32); // (86,255)
-          frame.graphics.lineTo(x+212,y-50); // (315,220)
-          frame.graphics.lineTo(x+195,y+9); // (295,305)
-          frame.graphics.lineTo(x+19,y+12); // (78,330)
-          frame.graphics.lineTo(x+20,y+2); // (82,310)
-          frame.graphics.lineTo(x+12,y+6); // (70,315)
-          frame.graphics.lineTo(x+8,y-1); // (64,295)
-          stage.addChild(frame);
+        var frame = new createjs.Shape();
+        frame.graphics.beginFill("White");
+        frame.graphics.moveTo(x-6,y+5); //(45,302)座標から書き始める
+        frame.graphics.lineTo(x+14,y-18); //(73,274)まで辺を書く
+        frame.graphics.lineTo(x+18,y-13); // (77,282)
+        frame.graphics.lineTo(x+23,y-18); // (83,275)
+        frame.graphics.lineTo(x+24,y-32); // (86,255)
+        frame.graphics.lineTo(x+212,y-50); // (315,220)
+        frame.graphics.lineTo(x+195,y+9); // (295,305)
+        frame.graphics.lineTo(x+19,y+12); // (78,330)
+        frame.graphics.lineTo(x+20,y+2); // (82,310)
+        frame.graphics.lineTo(x+12,y+6); // (70,315)
+        frame.graphics.lineTo(x+8,y-1); // (64,295)
+        stage.addChild(frame);
 
 
-          // とりあえず始点からの相対距離にする
-          // もしかしたら前の点からにしたほうが都合が良いかも
-          free.graphics.beginFill("Black");
-          free.graphics.moveTo(x,y); //(50,300)座標から書き始める
-          free.graphics.lineTo(x+13,y-14); // (70,280)
-          free.graphics.lineTo(x+17,y-9); // (78, 290)
-          free.graphics.lineTo(x+25,y-14); // (90,280)
-          free.graphics.lineTo(x+27,y-29); // (94,260)
-          free.graphics.lineTo(x+200,y-45); // (300,230)
-          free.graphics.lineTo(x+190,y+5); // (290,300)
-          free.graphics.lineTo(x+22,y+8); // (84,320)
-          free.graphics.lineTo(x+23,y-2); // (88,300)
-          free.graphics.lineTo(x+14,y+1); // (70,305)
-          free.graphics.lineTo(x+10,y-5); // (66,290)
-          stage.addChild(free);
-          stage.update();
+        // とりあえず始点からの相対距離にする
+        // もしかしたら前の点からにしたほうが都合が良いかも
+        free.graphics.beginFill("Black");
+        free.graphics.moveTo(x,y); //(50,300)座標から書き始める
+        free.graphics.lineTo(x+13,y-14); // (70,280)
+        free.graphics.lineTo(x+17,y-9); // (78, 290)
+        free.graphics.lineTo(x+25,y-14); // (90,280)
+        free.graphics.lineTo(x+27,y-29); // (94,260)
+        free.graphics.lineTo(x+200,y-45); // (300,230)
+        free.graphics.lineTo(x+190,y+5); // (290,300)
+        free.graphics.lineTo(x+22,y+8); // (84,320)
+        free.graphics.lineTo(x+23,y-2); // (88,300)
+        free.graphics.lineTo(x+14,y+1); // (70,305)
+        free.graphics.lineTo(x+10,y-5); // (66,290)
+        stage.addChild(free);
+        stage.update();
     }
 
     $scope.drawRightMsgForm = function(x,y) {
@@ -109,6 +109,44 @@ module.controller('PageController', function($scope) {
         free.graphics.lineTo(x-10 ,y-5); // (66,290)
         stage.addChild(free);
         stage.update();
+    }
+
+    $scope.drawIcon = function(x,y) {
+        var bmp = new createjs.Bitmap("./img/an.png");
+        var free = new createjs.Shape();
+        var frame1 = new createjs.Shape();
+        var frame2 = new createjs.Shape();
+
+        bmp.x = x+6
+        bmp.y = y-22
+        bmp.scaleX = 1.6
+        bmp.scaleY = 1.6
+
+        frame1.graphics.beginFill("Black");
+        frame1.graphics.moveTo(x-4-12,y-5-1); //(0,0)座標から書き始める
+        frame1.graphics.lineTo(x+12-3-3,y+46+3+6);
+        frame1.graphics.lineTo(x+75+3+4,y+36+3);
+        frame1.graphics.lineTo(x+67+3+1,y+6-3-1);
+
+        frame2.graphics.beginFill("White");
+        frame2.graphics.moveTo(x-4,y-5); //(0,0)座標から書き始める
+        frame2.graphics.lineTo(x+12-3,y+46+3);
+        frame2.graphics.lineTo(x+75+3,y+36+3);
+        frame2.graphics.lineTo(x+67+3,y+6-3);
+
+        free.graphics.beginFill("Pink");
+        free.graphics.moveTo(x,y); //(0,0)座標から書き始める
+        free.graphics.lineTo(x+12,y+46);
+        free.graphics.lineTo(x+75,y+36);
+        free.graphics.lineTo(x+67,y+6);
+        stage.addChild(frame1)
+        stage.addChild(frame2)
+        stage.addChild(free);
+        stage.addChild(bmp);
+        // createjs.Ticker.on("tick", function () {
+        //     // Stageの描画を更新します
+        //     stage.update();
+        // });
     }
 
 
@@ -170,34 +208,47 @@ module.controller('PageController', function($scope) {
             }
 
             // メッセージエリアの描画
-            var bmp = new createjs.Bitmap("/img/an_chat.png");
-            bmp.scaleX = 1.3
-            bmp.scaleY = 1.3
+            // var bmp = new createjs.Bitmap("/img/an_chat.png");
+            // bmp.scaleX = 1.3
+            // bmp.scaleY = 1.3
             console.log(my_side)
             if(my_side){
-                bmp.x = 180
+                // bmp.x = 180
                 var formx = 320
                 $scope.drawRightMsgForm(formx,lb[1]+10);
-
+                var t = new createjs.Text("どうしようか", "bold 14px メイリオ", "Black")
+                t.x = formx-180
+                t.y = lb[1]-15
+                stage.addChild(t)
             }else{
-                bmp.x = lb[0]-25;
-                var formx = lb[0]+40;
+                // bmp.x = lb[0]-25;
+                var formx = lb[0]+50;
+                $scope.drawIcon(lb[0]-10,lb[1]-15)
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
-                bmp.y = lb[1]-25;
-                msg_ctn.addChild(bmp);
+                var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
+                t.x = formx+36
+                t.y = lb[1]-13
+                stage.addChild(t)
+                // bmp.y = lb[1]-25;
+                // msg_ctn.addChild(bmp);
             }
             stage.update();
             change_f = false;
             return
         }
         if(ff){
-            var bmp = new createjs.Bitmap("/img/an_chat.png");
-            bmp.scaleX = 1.3
-            bmp.scaleY = 1.3
-            bmp.x = lb[0]-25;
-            bmp.y = lb[1]-25;
-            msg_ctn.addChild(bmp);
-            $scope.drawLeftMsgForm(lb[0]+40,lb[1]+10);
+            // var bmp = new createjs.Bitmap("/img/an_chat.png");
+            // bmp.scaleX = 1.3
+            // bmp.scaleY = 1.3
+            // bmp.x = lb[0]-25;
+            // bmp.y = lb[1]-25;
+            // msg_ctn.addChild(bmp);
+            $scope.drawIcon(lb[0]-10,lb[1]-15)
+            $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
+            var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
+            t.x = lb[0]+86
+            t.y = lb[1]-13
+            stage.addChild(t)
             createjs.Ticker.on("tick", function () {
                 // Stageの描画を更新します
                 stage.update();
@@ -222,20 +273,31 @@ module.controller('PageController', function($scope) {
             // $scope.$apply()
         }
         console.log($scope.canvas_height);
-        var bmp = new createjs.Bitmap("/img/an_chat.png");
-        bmp.scaleX = 1.3
-        bmp.scaleY = 1.3
+        // var bmp = new createjs.Bitmap("/img/an_chat.png");
+        // bmp.scaleX = 1.3
+        // bmp.scaleY = 1.3
         if(my_side){
-            bmp.x = 180
+            // bmp.x = 180
             var formx = 320
             $scope.drawRightMsgForm(formx,lb[1]+10);
+            var t = new createjs.Text("どうしようか", "bold 14px メイリオ", "Black")
+            t.x = formx-180
+            t.y = lb[1]-15
+            stage.addChild(t)
         }else{
-            bmp.x = lb[0]-25;
-            var formx = lb[0]+40
+            // bmp.x = lb[0]-25;
+            var formx = lb[0]+50
+            $scope.drawIcon(lb[0]-10,lb[1]-15)
             $scope.drawLeftMsgForm(formx,lb[1]+10);
-            bmp.y = lb[1]-25;
-            msg_ctn.addChild(bmp);
+            var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
+            t.x = formx+36
+            t.y = lb[1]-13
+            stage.addChild(t)
+            // bmp.y = lb[1]-25;
+            // msg_ctn.addChild(bmp);
         }
+
+        // メッセージの描画
         stage.update();
 
     }
