@@ -212,7 +212,6 @@ module.controller('PageController', function($scope) {
 
             if($scope.canvas_height < rb[1]){
                 $scope.canvas_height = rb[1] + 50
-                // $scope.$apply()
             }
 
             // メッセージエリアの描画
@@ -245,26 +244,6 @@ module.controller('PageController', function($scope) {
             pre_my_side = my_side;
             return
         }
-        // if(ff){
-        //     // var bmp = new createjs.Bitmap("/img/an_chat.png");
-        //     // bmp.scaleX = 1.3
-        //     // bmp.scaleY = 1.3
-        //     // bmp.x = lb[0]-25;
-        //     // bmp.y = lb[1]-25;
-        //     // msg_ctn.addChild(bmp);
-        //     $scope.drawIcon(lb[0]-10,lb[1]-15)
-        //     $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
-        //     var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
-        //     t.x = lb[0]+86
-        //     t.y = lb[1]-13
-        //     stage.addChild(t)
-        //     createjs.Ticker.on("tick", function () {
-        //         // Stageの描画を更新します
-        //         stage.update();
-        //       });
-        //     pre_my_side = my_side;
-        //     return
-        // }
         t_len = b_len;
         b_len = len_base[Math.floor(Math.random()*4)];
 
@@ -280,7 +259,6 @@ module.controller('PageController', function($scope) {
 
         if($scope.canvas_height < rb[1]){
             $scope.canvas_height = rb[1] + 50
-            // $scope.$apply()
         }
         console.log($scope.canvas_height);
         // var bmp = new createjs.Bitmap("/img/an_chat.png");
@@ -336,6 +314,10 @@ module.controller('PageController', function($scope) {
 
     $scope.sendMsg = function() {
         // まずメッセージを送信して，その後drawLineにメッセージを投げる
+        // その前に入力があるか確認
+        if(!$scope.sended_msg){
+            return
+        }
 
         var msg = {
             'room': "persona5",
@@ -360,6 +342,7 @@ module.controller('PageController', function($scope) {
         // $scope.messages.push(msg); //送信時と同様
         console.log(msg);
         $scope.drawLine(ff,false,msg.text);
+        $scope.$apply()
         ff = false;
         // $scope.$apply(); // 新たなメッセージを確認できるように画面の再描画
         // setLS(msg.room+"_messages",$scope.messages,1) //送信時と同様ローカルストレージに保存
