@@ -20,12 +20,12 @@
           <img src="./img/sns_title.png">
         </div>
         <div id="contents">
-          <canvas id="freeDraw" width="360" height="{{canvas_height}}"></canvas>
+          <canvas id="freeDraw" width="{{canvas_width}}" height="{{canvas_height}}"></canvas>
         </div>
         <div class="footer-bk">
             <div class="footer">
                 <input id="msg" class="text-input" type="text" placeholder="Message" ng-model="sended_msg" float>
-                <ons-button ng-click="sendMsg()"><ons-icon icon="ion-android-send" style="float: right"></ons-icon></ons-button>
+                <ons-button id="send-btn" ng-click="sendMsg()"><ons-icon icon="ion-android-send"></ons-icon></ons-button>
             </div>
         </div>
       </ons-page>

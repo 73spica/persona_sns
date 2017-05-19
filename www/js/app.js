@@ -3,6 +3,7 @@ module.controller('AppController', function($scope) { });
 module.controller('PageController', function($scope) {
     // canvas要素を動的に変えるためのスコープ
     $scope.canvas_height = 500;
+    $scope.canvas_width = screen.width
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")

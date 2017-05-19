@@ -33,12 +33,17 @@ div.footer {
 }
 
 div.footer > input{
-    width: 80%;
+    width: 78%;
     float: left;
+}
+
+#send-btn {
+    text-align:center;
 }
 
 div.footer > .button {
   background-color: rgba(4,4,4,0.2);
+  width: 15%
 }
 div.footer > .button:active {
   background-color: rgba(4,4,4,0.2);
