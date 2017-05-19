@@ -4,6 +4,10 @@ module.controller('PageController', function($scope) {
     // canvas要素を動的に変えるためのスコープ
     $scope.canvas_height = 500;
 
+    // socket使うよ
+    // var sock = io.connect("http://localhost:3000")
+    var sock = io.connect("http://27.120.110.171:3000")
+
     //createjsの描画領域の定義
     var stage = new createjs.Stage("freeDraw");
     var free = new createjs.Shape();
@@ -27,7 +31,7 @@ module.controller('PageController', function($scope) {
     var ff = true; // first flag．最初だけ黒線が出ないので必要．
     var change_f = false; // 実際は一つ前のメッセージの送信者 != 今のメッセージの送信者的なこと
     var my_side = false; // 実際は上のチェンジの結果どっちさいどにいるか
-
+    var pre_my_side;
     // コントローラー ( controller ) 内の処理
     $scope.myName = "";
     $scope.clickHandler = function() {
@@ -111,8 +115,8 @@ module.controller('PageController', function($scope) {
         stage.update();
     }
 
-    $scope.drawIcon = function(x,y) {
-        var bmp = new createjs.Bitmap("./img/an.png");
+    $scope.drawIcon = function(x,y,icon,color) {
+        var bmp = new createjs.Bitmap(icon);
         var free = new createjs.Shape();
         var frame1 = new createjs.Shape();
         var frame2 = new createjs.Shape();
@@ -134,7 +138,7 @@ module.controller('PageController', function($scope) {
         frame2.graphics.lineTo(x+75+3,y+36+3);
         frame2.graphics.lineTo(x+67+3,y+6-3);
 
-        free.graphics.beginFill("Pink");
+        free.graphics.beginFill(color);
         free.graphics.moveTo(x,y); //(0,0)座標から書き始める
         free.graphics.lineTo(x+12,y+46);
         free.graphics.lineTo(x+75,y+36);
@@ -172,7 +176,7 @@ module.controller('PageController', function($scope) {
         line_ctn.addChild(free);
     }
 
-    $scope.drawLine = function(ff) {
+    $scope.drawLine = function(ff, my_side,msg) {
         // 必要なパラメータを生成する
         // 縦の高さ．とりま80固定
         // 横の幅．とりまひとつだけ
@@ -181,9 +185,12 @@ module.controller('PageController', function($scope) {
 
         // 自分側と相手側を移す判定のテスト用
         // 実際は前の送信者と今の送信者を比較する．
-        if(c%5==1 || c%5==3){
+        // if(c%5==1 || c%5==3){
+        //     change_f = true;
+        //     my_side = !my_side
+        // }
+        if (pre_my_side!=my_side){
             change_f = true;
-            my_side = !my_side
         }
 
         // 前の送信者との比較の結果，サイドが変わるようならこれに入る．
@@ -216,16 +223,16 @@ module.controller('PageController', function($scope) {
                 // bmp.x = 180
                 var formx = 320
                 $scope.drawRightMsgForm(formx,lb[1]+10);
-                var t = new createjs.Text("どうしようか", "bold 14px メイリオ", "Black")
+                var t = new createjs.Text(msg, "bold 14px メイリオ", "Black")
                 t.x = formx-180
                 t.y = lb[1]-15
                 stage.addChild(t)
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50;
-                $scope.drawIcon(lb[0]-10,lb[1]-15)
+                $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
-                var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
+                var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
                 t.x = formx+36
                 t.y = lb[1]-13
                 stage.addChild(t)
@@ -234,27 +241,29 @@ module.controller('PageController', function($scope) {
             }
             stage.update();
             change_f = false;
+            pre_my_side = my_side;
             return
         }
-        if(ff){
-            // var bmp = new createjs.Bitmap("/img/an_chat.png");
-            // bmp.scaleX = 1.3
-            // bmp.scaleY = 1.3
-            // bmp.x = lb[0]-25;
-            // bmp.y = lb[1]-25;
-            // msg_ctn.addChild(bmp);
-            $scope.drawIcon(lb[0]-10,lb[1]-15)
-            $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
-            var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
-            t.x = lb[0]+86
-            t.y = lb[1]-13
-            stage.addChild(t)
-            createjs.Ticker.on("tick", function () {
-                // Stageの描画を更新します
-                stage.update();
-              });
-            return
-        }
+        // if(ff){
+        //     // var bmp = new createjs.Bitmap("/img/an_chat.png");
+        //     // bmp.scaleX = 1.3
+        //     // bmp.scaleY = 1.3
+        //     // bmp.x = lb[0]-25;
+        //     // bmp.y = lb[1]-25;
+        //     // msg_ctn.addChild(bmp);
+        //     $scope.drawIcon(lb[0]-10,lb[1]-15)
+        //     $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
+        //     var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
+        //     t.x = lb[0]+86
+        //     t.y = lb[1]-13
+        //     stage.addChild(t)
+        //     createjs.Ticker.on("tick", function () {
+        //         // Stageの描画を更新します
+        //         stage.update();
+        //       });
+        //     pre_my_side = my_side;
+        //     return
+        // }
         t_len = b_len;
         b_len = len_base[Math.floor(Math.random()*4)];
 
@@ -280,16 +289,16 @@ module.controller('PageController', function($scope) {
             // bmp.x = 180
             var formx = 320
             $scope.drawRightMsgForm(formx,lb[1]+10);
-            var t = new createjs.Text("どうしようか", "bold 14px メイリオ", "Black")
+            var t = new createjs.Text(msg, "bold 14px メイリオ", "Black")
             t.x = formx-180
             t.y = lb[1]-15
             stage.addChild(t)
         }else{
             // bmp.x = lb[0]-25;
             var formx = lb[0]+50
-            $scope.drawIcon(lb[0]-10,lb[1]-15)
+            $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
             $scope.drawLeftMsgForm(formx,lb[1]+10);
-            var t = new createjs.Text("今日どうする？", "bold 14px メイリオ", "White")
+            var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
             t.x = formx+36
             t.y = lb[1]-13
             stage.addChild(t)
@@ -299,16 +308,67 @@ module.controller('PageController', function($scope) {
 
         // メッセージの描画
         stage.update();
+        pre_my_side = my_side;
+    }
 
+    $scope.enterRoom = function() {
+        // 今は起動時に入れればいいのでこれだけ
+        var room = {
+            'room': "persona5",
+            'user': "an",
+            'icon': "kari"
+        }
+        sock.emit('join:room',room)
+        $scope.drawIcon(lb[0]-10,lb[1]-15,"img/system.png","Red")
+        $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
+        var t = new createjs.Text("Welcome to P5SNS", "bold 14px メイリオ", "White")
+        t.x = lb[0]+86
+        t.y = lb[1]-13
+        stage.addChild(t)
+        createjs.Ticker.on("tick", function () {
+            // Stageの描画を更新します
+            stage.update();
+          });
+        pre_my_side = false;
+        return
     }
 
     $scope.sendMsg = function() {
-        $scope.drawLine(ff);
+        // まずメッセージを送信して，その後drawLineにメッセージを投げる
+
+        var msg = {
+            'room': "persona5",
+            'user': "an",
+            'text': $scope.sended_msg,
+            'icon': "kari"
+        }
+        //ほんとはこのあとにメッセージ保存したりする必要あり
+        //いまは描画して放置だけど，後々開いたらDBからログ読み込んで再描画みたいな処理も必要そう．
+        console.dir(msg);
+        sock.emit('send:message',msg);
+        $scope.sended_msg = ""
+
+        $scope.drawLine(ff,true,msg.text);
         ff = false;
         c += 1
         // $scope.drawLeftMsgForm(50,300);
     }
+
+    // サーバからのメッセージ待受
+    sock.on('message', function(msg){
+        // $scope.messages.push(msg); //送信時と同様
+        console.log(msg);
+        $scope.drawLine(ff,false,msg.text);
+        ff = false;
+        // $scope.$apply(); // 新たなメッセージを確認できるように画面の再描画
+        // setLS(msg.room+"_messages",$scope.messages,1) //送信時と同様ローカルストレージに保存
+        // goBottom("bottom");
+        // console.log($scope.messages);
+        // $ionicScrollDelegate.scrollBottom();
+    });
+
     ons.ready(function() {
 // 初期化 ( Init ) 用のコードをここに置きます。
+        $scope.enterRoom()
     });
 });
