@@ -1,16 +1,17 @@
-# PERSONA SNS APP
+# PERSONA5 SNS APP
 _Creating now_
-
+* ペルソナ5面白すぎたので勢いで作成
+* ペルソナ5内でキャラクター達がやり取りするのに使っているアプリを模してみました
 * cordova使ってる
 * 取り急ぎwww配下のみ管理
+* createJSとか使ってみたかった
+* 自分のテンションを高める用アプリ
 
 # Prototype
-* プロトタイプ2
-* 特徴的なメッセージボックスを実装
-* 動的に作っているのでメッセージ長に合わせて大きさを変えたい
-* チャット機能は未実装なので文字列は定形
-* フォント弱者なのでゲーム内で使われているフォントに似たのが見つけられない
-* 細かいエフェクトは取り急ぎ割愛して，チャット部分を作ろうとおもっています
+* プロトタイプ3
+* チャット部分をnodejsのsocketioで実装
+* 他メンバーのアイコンつけたり黒線に影付けたり環境によってバグでないようにしたりとやることは多い
+* 画像とか適当に拾ったやつ使ってしまっているので完全に自己満足用です． 
 
-![demo](https://github.com/73spica/persona_sns/blob/master/demo/persona_sns_proto02.gif)
+![demo](https://github.com/73spica/persona_sns/blob/master/demo/persona_sns_proto03.gif)
 

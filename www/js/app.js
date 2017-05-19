@@ -7,7 +7,6 @@ module.controller('PageController', function($scope) {
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")
-    var sock = io.connect("http://27.120.110.171:3000")
 
     //createjsの描画領域の定義
     var stage = new createjs.Stage("freeDraw");
