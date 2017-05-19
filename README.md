@@ -1,4 +1,4 @@
-# PERSONA5 SNS APP
+# PERSONA5 SNS(CHAT) APP
 _Creating now_
 * ペルソナ5面白すぎたので勢いで作成
 * ペルソナ5内でキャラクター達がやり取りするのに使っているアプリを模してみました
