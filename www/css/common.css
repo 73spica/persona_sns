@@ -3,6 +3,13 @@
     position: fixed;
 }
 
+@font-face {
+    font-family: 'rounded-mplus';
+    src: url('fonts/rounded-x-mplus-2c-heavy.ttf') format('truetype');
+    /*font-weight: 900;*/
+    /*font-style: heavy;*/
+}
+
 #contents {
     margin-top: 20px;
     margin-bottom: 60px;

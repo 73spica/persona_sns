@@ -7,8 +7,10 @@ module.controller('PageController', function($scope) {
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")
+    var sock = io.connect("http://27.120.110.171:3000")
 
     //createjsの描画領域の定義
+    var container; // drawLineで毎回初期化して使えば良さそう．
     var stage = new createjs.Stage("freeDraw");
     var free = new createjs.Shape();
     var line_ctn = new createjs.Container(); // 黒いライン用コンテナ
@@ -34,11 +36,11 @@ module.controller('PageController', function($scope) {
     var pre_my_side;
     // コントローラー ( controller ) 内の処理
     $scope.myName = "";
-    $scope.clickHandler = function() {
-        ons.notification.alert({ message: "Hello " + $scope.myName });
-    }
 
-
+    
+    // ======================================
+    //           drawLeftMsgForm
+    // ======================================
     // メッセージのフォームをcreatejsで生成する
     // これは始点を引数にしてそこから描画できるように書き換えたい．
     // 始点は配列で渡すかx,yで渡すか...
@@ -58,7 +60,7 @@ module.controller('PageController', function($scope) {
         frame.graphics.lineTo(x+20,y+2); // (82,310)
         frame.graphics.lineTo(x+12,y+6); // (70,315)
         frame.graphics.lineTo(x+8,y-1); // (64,295)
-        stage.addChild(frame);
+        container.addChild(frame);
 
 
         // とりあえず始点からの相対距離にする
@@ -75,10 +77,13 @@ module.controller('PageController', function($scope) {
         free.graphics.lineTo(x+23,y-2); // (88,300)
         free.graphics.lineTo(x+14,y+1); // (70,305)
         free.graphics.lineTo(x+10,y-5); // (66,290)
-        stage.addChild(free);
-        stage.update();
+        container.addChild(free);
+        //stage.update();
     }
 
+    // ======================================
+    //           drawRightMsgForm
+    // ======================================
     $scope.drawRightMsgForm = function(x,y) {
         var free = new createjs.Shape();
         var frame = new createjs.Shape();
@@ -94,7 +99,7 @@ module.controller('PageController', function($scope) {
         frame.graphics.lineTo(x-20  ,y+2  ); // (82,310)
         frame.graphics.lineTo(x-12  ,y+6  ); // (70,315)
         frame.graphics.lineTo(x-8   ,y-1  ); // (64,295)
-        stage.addChild(frame);
+        container.addChild(frame);
 
 
         // とりあえず始点からの相対距離にする
@@ -111,10 +116,13 @@ module.controller('PageController', function($scope) {
         free.graphics.lineTo(x-23 ,y-3); // (88,300)
         free.graphics.lineTo(x-14 ,y+1); // (70,305)
         free.graphics.lineTo(x-10 ,y-5); // (66,290)
-        stage.addChild(free);
-        stage.update();
+        container.addChild(free);
+        //stage.update();
     }
 
+    // ======================================
+    //           drawIcon
+    // ======================================
     $scope.drawIcon = function(x,y,icon,color) {
         var bmp = new createjs.Bitmap(icon);
         var free = new createjs.Shape();
@@ -143,10 +151,10 @@ module.controller('PageController', function($scope) {
         free.graphics.lineTo(x+12,y+46);
         free.graphics.lineTo(x+75,y+36);
         free.graphics.lineTo(x+67,y+6);
-        stage.addChild(frame1)
-        stage.addChild(frame2)
-        stage.addChild(free);
-        stage.addChild(bmp);
+        container.addChild(frame1)
+        container.addChild(frame2)
+        container.addChild(free);
+        container.addChild(bmp);
         // createjs.Ticker.on("tick", function () {
         //     // Stageの描画を更新します
         //     stage.update();
@@ -154,7 +162,9 @@ module.controller('PageController', function($scope) {
     }
 
 
-    // ==== Draw Line ====
+    // ======================================
+    //           drawBlackLine
+    // ======================================
     // ■メッセージが１行のとき
     // 横の動き幅　：40 ~ 60
     // 縦の動き高さ：80
@@ -176,25 +186,39 @@ module.controller('PageController', function($scope) {
         line_ctn.addChild(free);
     }
 
+
+    // ======================================
+    //                drawMsg
+    // ======================================
+    $scope.drawMsg = function(msg, x, y, rotate, color){
+        console.log(msg)
+        var t = new createjs.Text(msg, "14px rounded-mplus", color)
+        t.x = x
+        t.y = y
+        t.rotation += rotate
+        container.addChild(t)
+    }
+
+    // ======================================
+    //           drawLine
+    // ======================================
+    // 必要なパーツをここで描画する．
+    // 主に自分側・相手側のみで
     $scope.drawLine = function(ff, my_side,msg) {
         // 必要なパラメータを生成する
         // 縦の高さ．とりま80固定
         // 横の幅．とりまひとつだけ
         // 線の幅．最初だけ上底も下底も決める．
         // 自分の方に行くときは300を基準にする
+        
+        // とりあえずcontainerを初期化してstageに追加する
+        container = new createjs.Container();
+        container.rotation = -5;
+        stage.addChild(container);
+        console.dir(container);
 
-        // 自分側と相手側を移す判定のテスト用
-        // 実際は前の送信者と今の送信者を比較する．
-        // if(c%5==1 || c%5==3){
-        //     change_f = true;
-        //     my_side = !my_side
-        // }
-        if (pre_my_side!=my_side){
-            change_f = true;
-        }
-
-        // 前の送信者との比較の結果，サイドが変わるようならこれに入る．
-        if(change_f){
+        // 自分側から相手側に，相手側から自分側に黒線が移るときはこの処理に入る．
+        if(pre_my_side!=my_side){
             // まずは黒線の太さを更新
             t_len = b_len;
             b_len = len_base[Math.floor(Math.random()*4)];
@@ -202,7 +226,12 @@ module.controller('PageController', function($scope) {
             // 座標を決めていく
             lt = lb
             rt = rb
-            lb = [lt[0]+change_side, lt[1]+h] //今はwを-スタートにしてるので
+            // 相手サイドに行くときのhは大きくとっといたほうが良い．
+            if(my_side){
+                lb = [lt[0]+change_side, lt[1]+h-10] //今はwを-スタートにしてるので
+            } else {
+                lb = [lt[0]+change_side, lt[1]+h+15] //今はwを-スタートにしてるので
+            }
             rb = [lb[0]+b_len, lb[1]]
             change_side = -change_side // 次サイドが変わるときのために反転
 
@@ -214,82 +243,83 @@ module.controller('PageController', function($scope) {
             }
 
             // メッセージエリアの描画
-            // var bmp = new createjs.Bitmap("/img/an_chat.png");
-            // bmp.scaleX = 1.3
-            // bmp.scaleY = 1.3
             console.log(my_side)
             if(my_side){
                 // bmp.x = 180
                 var formx = 320
                 $scope.drawRightMsgForm(formx,lb[1]+10);
-                var t = new createjs.Text(msg, "bold 14px メイリオ", "Black")
-                t.x = formx-180
-                t.y = lb[1]-15
-                stage.addChild(t)
+                $scope.drawMsg(msg, formx-180, lb[1]-15, 1, "Black");
+                container.x = formx
+                container.y = lb[1]+10
+                container.regX = formx
+                container.regY = lb[1]+10
+                container.rotation = -9;
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50;
                 $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
-                var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
-                t.x = formx+36
-                t.y = lb[1]-13
-                stage.addChild(t)
-                // bmp.y = lb[1]-25;
-                // msg_ctn.addChild(bmp);
+                $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White");
+                container.x = lb[0]+50
+                container.y = lb[1]+10
+                container.regX = lb[0]+50
+                container.regY = lb[1]+10
             }
-            stage.update();
             change_f = false;
             pre_my_side = my_side;
-            return
+        } else {
+            t_len = b_len; // *
+            b_len = len_base[Math.floor(Math.random()*4)]; // *
+
+            // 座標を決めていく
+            lt = lb //これ，グローバルにlb,rb作っとけばうまくできそう．
+            rt = rb
+            lb = [lt[0]+w, lt[1]+h] //今はwを-スタートにしてるので
+            rb = [lb[0]+b_len, lb[1]]
+            w = -w // サイドが変わらないときは毎回変えて良い
+
+            // 黒線の描画
+            drawBlackLine(lt,lb,rb,rt,free)
+
+            if($scope.canvas_height < rb[1]){
+                $scope.canvas_height = rb[1] + 50
+            }
+            console.log($scope.canvas_height);
+            if(my_side){
+                // bmp.x = 180
+                var formx = 320
+                $scope.drawRightMsgForm(formx,lb[1]+10);
+                $scope.drawMsg(msg, formx-180, lb[1]-15, 1, "Black")
+                container.x = formx
+                container.y = lb[1]+10
+                container.regX = formx
+                container.regY = lb[1]+10
+                container.rotation = -9;
+            }else{
+                // bmp.x = lb[0]-25;
+                var formx = lb[0]+50
+                $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
+                $scope.drawLeftMsgForm(formx,lb[1]+10);
+                $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White")
+                container.x = lb[0]+50
+                container.y = lb[1]+10
+                container.regX = lb[0]+50
+                container.regY = lb[1]+10
+            }
+
+
+            // メッセージの描画
+            pre_my_side = my_side;
         }
-        t_len = b_len;
-        b_len = len_base[Math.floor(Math.random()*4)];
 
-        // 座標を決めていく
-        lt = lb //これ，グローバルにlb,rb作っとけばうまくできそう．
-        rt = rb
-        lb = [lt[0]+w, lt[1]+h] //今はwを-スタートにしてるので
-        rb = [lb[0]+b_len, lb[1]]
-        w = -w
-
-        // 黒線の描画
-        drawBlackLine(lt,lb,rb,rt,free)
-
-        if($scope.canvas_height < rb[1]){
-            $scope.canvas_height = rb[1] + 50
-        }
-        console.log($scope.canvas_height);
-        // var bmp = new createjs.Bitmap("/img/an_chat.png");
-        // bmp.scaleX = 1.3
-        // bmp.scaleY = 1.3
-        if(my_side){
-            // bmp.x = 180
-            var formx = 320
-            $scope.drawRightMsgForm(formx,lb[1]+10);
-            var t = new createjs.Text(msg, "bold 14px メイリオ", "Black")
-            t.x = formx-180
-            t.y = lb[1]-15
-            stage.addChild(t)
-        }else{
-            // bmp.x = lb[0]-25;
-            var formx = lb[0]+50
-            $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
-            $scope.drawLeftMsgForm(formx,lb[1]+10);
-            var t = new createjs.Text(msg, "bold 14px メイリオ", "White")
-            t.x = formx+36
-            t.y = lb[1]-13
-            stage.addChild(t)
-            // bmp.y = lb[1]-25;
-            // msg_ctn.addChild(bmp);
-        }
-
-        // メッセージの描画
-        stage.update();
-        pre_my_side = my_side;
+        //それぞれはコンテナに描画して，ここでstageに入れるようにできれば，うまいことできそうな希ガス
+        //そもそも最初に追加するからいらないかも
     }
 
     $scope.enterRoom = function() {
+        //ここでも初期化
+        container = new createjs.Container();
+        stage.addChild(container);
         // 今は起動時に入れればいいのでこれだけ
         var room = {
             'room': "persona5",
@@ -299,19 +329,24 @@ module.controller('PageController', function($scope) {
         sock.emit('join:room',room)
         $scope.drawIcon(lb[0]-10,lb[1]-15,"img/system.png","Red")
         $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
-        var t = new createjs.Text("Welcome to P5SNS", "bold 14px メイリオ", "White")
-        t.x = lb[0]+86
-        t.y = lb[1]-13
-        stage.addChild(t)
+        $scope.drawMsg("Welcome to P5SNS", lb[0]+83, lb[1]-13, -4, "White");
+        container.x = lb[0]+50
+        container.y = lb[1]+10
+        container.regX = lb[0]+50
+        container.regY = lb[1]+10
+        container.rotation = -5
+
         createjs.Ticker.on("tick", function () {
             // Stageの描画を更新します
             stage.update();
           });
         pre_my_side = false;
-        return
     }
 
     $scope.sendMsg = function() {
+        container = new createjs.Container();
+        stage.addChild(container);
+
         // まずメッセージを送信して，その後drawLineにメッセージを投げる
         // その前に入力があるか確認
         if(!$scope.sended_msg){
@@ -351,7 +386,7 @@ module.controller('PageController', function($scope) {
     });
 
     ons.ready(function() {
-// 初期化 ( Init ) 用のコードをここに置きます。
+        // 初期化 ( Init ) 用のコードをここに置きます。
         $scope.enterRoom()
     });
 });
