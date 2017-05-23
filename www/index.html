@@ -40,8 +40,23 @@
     </ons-sliding-menu>
     <ons-template id="menu.html">
         <ons-list style="margin: -1px 0">
+            <ons-list-header>メイン</ons-list-header>
+            <ons-list-item modifier="tappable" class="item" onclick="menu.setMainPage('chat.html',{closeMenu: true})">
+                <ons-row>
+                    <ons-col width="20px">
+                        <div><ons-icon icon="ion-chatboxes" size="20px"></ons-icon></div>
+                    </ons-col>
+                    <ons-col>
+                        <header>
+                            <span class="item-title">チャットルーム</span>
+                        </header>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+        <ons-list style="margin: -1px 0">
                 <ons-list-header>システムメニュー的な</ons-list-header>
-                <ons-list-item modifier="tappable" class="item" >
+                <ons-list-item modifier="tappable" class="item" onclick="menu.setMainPage('icon_setting.html',{closeMenu: true})">
                     <ons-row>
                         <ons-col width="20px">
                             <div><ons-icon icon="ion-gear-a" size="20px"></ons-icon></div>
@@ -53,7 +68,7 @@
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
-                <ons-list-item modifier="tappable" class="item" ng-click="dirtest()" >
+                <ons-list-item modifier="tappable" class="item" ng-click="" >
                     <ons-row>
                         <ons-col width="20px">
                             <div><ons-icon icon="ion-help-circled" size="20px"></ons-icon></div>

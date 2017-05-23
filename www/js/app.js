@@ -1,9 +1,19 @@
 var module = angular.module('my-app', ['onsen']);
 module.controller('AppController', function($scope) { });
-module.controller('PageController', function($scope) {
+
+
+module.factory('Icon',function(){
+    return {path:'img/an.png'};
+});
+
+module.controller('PageController', function($scope, Icon) {
     // canvas要素を動的に変えるためのスコープ
     $scope.canvas_height = 500;
     $scope.canvas_width = screen.width
+    
+    // 使えるアイコン一覧
+    $scope.icons = ["img/an.png","img/ryuji.png","img/yusuke.png","img/makoto.png","img/takemi.png","img/mishima.png"]
+    $scope.icon = Icon
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")
@@ -37,6 +47,13 @@ module.controller('PageController', function($scope) {
     // コントローラー ( controller ) 内の処理
     $scope.myName = "";
 
+    // ======================================
+    //           drawLeftMsgForm
+    // ======================================
+    $scope.selectIcon = function(icon_path) {
+        $scope.icon.path = icon_path;
+        menu.setMainPage('chat.html',{closeMenu: true})
+    }
     
     // ======================================
     //           drawLeftMsgForm
@@ -204,7 +221,7 @@ module.controller('PageController', function($scope) {
     // ======================================
     // 必要なパーツをここで描画する．
     // 主に自分側・相手側のみで
-    $scope.drawLine = function(ff, my_side,msg) {
+    $scope.drawLine = function(ff, my_side,msg,icon) {
         // 必要なパラメータを生成する
         // 縦の高さ．とりま80固定
         // 横の幅．とりまひとつだけ
@@ -257,7 +274,7 @@ module.controller('PageController', function($scope) {
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50;
-                $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
+                $scope.drawIcon(lb[0]-10,lb[1]-15, icon,"Pink")
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
                 $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White");
                 container.x = lb[0]+50
@@ -298,7 +315,7 @@ module.controller('PageController', function($scope) {
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50
-                $scope.drawIcon(lb[0]-10,lb[1]-15,"img/an.png","Pink")
+                $scope.drawIcon(lb[0]-10,lb[1]-15,icon,"Pink")
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
                 $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White")
                 container.x = lb[0]+50
@@ -324,7 +341,7 @@ module.controller('PageController', function($scope) {
         var room = {
             'room': "persona5",
             'user': "an",
-            'icon': "kari"
+            'icon': $scope.icon.path
         }
         sock.emit('join:room',room)
         $scope.drawIcon(lb[0]-10,lb[1]-15,"img/system.png","Red")
@@ -357,7 +374,7 @@ module.controller('PageController', function($scope) {
             'room': "persona5",
             'user': "an",
             'text': $scope.sended_msg,
-            'icon': "kari"
+            'icon': $scope.icon.path
         }
         //ほんとはこのあとにメッセージ保存したりする必要あり
         //いまは描画して放置だけど，後々開いたらDBからログ読み込んで再描画みたいな処理も必要そう．
@@ -365,7 +382,7 @@ module.controller('PageController', function($scope) {
         sock.emit('send:message',msg);
         $scope.sended_msg = ""
 
-        $scope.drawLine(ff,true,msg.text);
+        $scope.drawLine(ff,true,msg.text,msg.icon);
         ff = false;
         c += 1
         // $scope.drawLeftMsgForm(50,300);
@@ -375,7 +392,7 @@ module.controller('PageController', function($scope) {
     sock.on('message', function(msg){
         // $scope.messages.push(msg); //送信時と同様
         console.log(msg);
-        $scope.drawLine(ff,false,msg.text);
+        $scope.drawLine(ff,false,msg.text,msg.icon);
         $scope.$apply()
         ff = false;
         // $scope.$apply(); // 新たなメッセージを確認できるように画面の再描画

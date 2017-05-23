@@ -10,6 +10,38 @@
     /*font-style: heavy;*/
 }
 
+/* icon_list */
+ul.icon_list {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 75vw;
+    margin: 10px auto;
+    padding: 0;
+}
+ul.icon_list li > div {
+    display: block;
+    width: 20vw; /*ここの二つの値で横いくつ入るか決めてる*/
+    height: 20vw;
+    margin: 10vw 0 0 0;
+    /*background: #fff;*/
+    border: 1px;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    box-sizing: border-box;
+    /*
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    */
+}
+ul.icon_list li img.catch {
+    width: 100%;
+    height: 100%;
+}
+
 #contents {
     margin-top: 20px;
     margin-bottom: 60px;
