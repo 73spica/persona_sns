@@ -1,0 +1,16 @@
+<ons-page>
+<div ng-show="active_tab == 'member'">
+                <ul class="icon_list">
+                    <!--<li ng-repeat="value in [1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17]">
+                        <div>
+                            <img src="./img/common/icon_sample.png" class="catch">
+                        </div>
+                    </li>-->
+                    <li ng-repeat="icon in icons track by $index">
+                        <div>
+                            <img src="{{icon}}" class="catch">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+</ons-page>

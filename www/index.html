@@ -13,14 +13,13 @@
     <script src="./js/socket.io.js"></script>
   </head>
   <body ng-controller="AppController">
-    <ons-navigator var="navi">
-      <ons-page id=container ng-controller="PageController">
-        <!-- ページのコンテンツ -->
+    <!-- <ons-navigator var="navi">
+    <ons-page id=container ng-controller="PageController">
         <div id="sns-title">
-          <img src="./img/sns_title.png">
+            <img src="./img/sns_title.png">
         </div>
         <div id="contents">
-          <canvas id="freeDraw" width="{{canvas_width}}" height="{{canvas_height}}"></canvas>
+            <canvas id="freeDraw" width="{{canvas_width}}" height="{{canvas_height}}"></canvas>
         </div>
         <div class="footer-bk">
             <div class="footer">
@@ -28,7 +27,46 @@
                 <ons-button id="send-btn" ng-click="sendMsg()"><ons-icon icon="ion-android-send"></ons-icon></ons-button>
             </div>
         </div>
-      </ons-page>
-    </ons-navigator>
+    </ons-page>
+    </ons-navigator> -->
+    <ons-sliding-menu
+        main-page="chat.html"
+        menu-page="menu.html"
+        side="left"
+        var="menu"
+        max-slide-distance="200px"
+        type="overlay"
+        swipe-target-width="180px">
+    </ons-sliding-menu>
+    <ons-template id="menu.html">
+        <ons-list style="margin: -1px 0">
+                <ons-list-header>システムメニュー的な</ons-list-header>
+                <ons-list-item modifier="tappable" class="item" >
+                    <ons-row>
+                        <ons-col width="20px">
+                            <div><ons-icon icon="ion-gear-a" size="20px"></ons-icon></div>
+                        </ons-col>
+                        <ons-col>
+                            <header>
+                                <span class="item-title">アイコン設定</span>
+                            </header>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+                <ons-list-item modifier="tappable" class="item" ng-click="dirtest()" >
+                    <ons-row>
+                        <ons-col width="20px">
+                            <div><ons-icon icon="ion-help-circled" size="20px"></ons-icon></div>
+                        </ons-col>
+                        <ons-col>
+                            <header>
+                                <span class="item-title">ヘルプ</span>
+                            </header>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+        </ons-template>
+
   </body>
 </html>

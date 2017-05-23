@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" ng-app="my-app">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./css/onsenui.css"/>
+    <link rel="stylesheet" href="./css/onsen-css-components.css"/>
+    <link rel="stylesheet" href="./css/common.css"/>
+    <script src="./js/angular-1.6.4/angular.min.js"></script>
+    <script src="./js/onsenui.js"></script>
+    <script src="./js/angular-onsenui.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/createjs-2015.11.26.min.js"></script>
+    <script src="./js/socket.io.js"></script>
+  </head>
+  <body ng-controller="AppController">
+    <ons-page id=container ng-controller="PageController">
+        <!-- ページのコンテンツ -->
+        <div id="sns-title">
+            <img src="./img/sns_title.png">
+        </div>
+        <div id="contents">
+            <canvas id="freeDraw" width="{{canvas_width}}" height="{{canvas_height}}"></canvas>
+        </div>
+        <div class="footer-bk">
+            <div class="footer">
+                <input id="msg" class="text-input" type="text" placeholder="Message" ng-model="sended_msg" float>
+                <ons-button id="send-btn" ng-click="sendMsg()"><ons-icon icon="ion-android-send"></ons-icon></ons-button>
+            </div>
+        </div>
+    </ons-page>
+</body>
+</html>
