@@ -1,22 +1,41 @@
+// https://unpkg.com/onsenui@2.2.6/
 var module = angular.module('my-app', ['onsen']);
 module.controller('AppController', function($scope) { });
 
 
 module.factory('Icon',function(){
-    return {path:'img/an.png'};
+    return {name:'an'};
+});
+
+
+module.controller('SettingCtrl',function() {
+    
 });
 
 module.controller('PageController', function($scope, Icon) {
     // canvas要素を動的に変えるためのスコープ
     $scope.canvas_height = 500;
     $scope.canvas_width = screen.width
-    
+
     // 使えるアイコン一覧
-    $scope.icons = ["img/an.png","img/ryuji.png","img/yusuke.png","img/makoto.png","img/takemi.png","img/mishima.png"]
+    $scope.icons = ["an","ryuji","yusuke","makoto","takemi","mishima", "akechi"]
+
+    //$scope.icons = ["img/an.png","img/ryuji.png","img/yusuke.png","img/makoto.png","img/takemi.png","img/mishima.png", "img/akechi.png"]
     $scope.icon = Icon
+    var icon_color = {
+        "img/an.png":"Pink",
+        "img/ryuji.png":"#DDEE48",
+        "img/yusuke.png":"#3CD1E9",
+        "img/makoto.png":"#1964E1",
+        "img/takemi.png":"#FFAA01",
+        "img/mishima.png":"#FEAC00",
+        "img/akechi.png":"#D3E8E3",
+        "img/system.png":"Red"
+    }
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")
+    var sock = io.connect("http://27.120.110.171:3000")
 
     //createjsの描画領域の定義
     var container; // drawLineで毎回初期化して使えば良さそう．
@@ -46,14 +65,17 @@ module.controller('PageController', function($scope, Icon) {
     // コントローラー ( controller ) 内の処理
     $scope.myName = "";
 
+
     // ======================================
-    //           drawLeftMsgForm
+    //              selectIcon
     // ======================================
-    $scope.selectIcon = function(icon_path) {
-        $scope.icon.path = icon_path;
-        menu.setMainPage('chat.html',{closeMenu: true})
+    $scope.selectIcon = function(icon_name) {
+        console.log(icon_name+"をアクティブにします．");
+        $('#'+$scope.icon.name).removeClass('active')
+        $scope.icon.name = icon_name;
+        $('#'+icon_name).addClass('active')
     }
-    
+
     // ======================================
     //           drawLeftMsgForm
     // ======================================
@@ -139,16 +161,16 @@ module.controller('PageController', function($scope, Icon) {
     // ======================================
     //           drawIcon
     // ======================================
-    $scope.drawIcon = function(x,y,icon,color) {
+    $scope.drawIcon = function(x,y,icon) {
         var bmp = new createjs.Bitmap(icon);
         var free = new createjs.Shape();
         var frame1 = new createjs.Shape();
         var frame2 = new createjs.Shape();
 
-        bmp.x = x+6
-        bmp.y = y-22
-        bmp.scaleX = 1.6
-        bmp.scaleY = 1.6
+        bmp.x = x+8
+        bmp.y = y-17
+        bmp.scaleX = 1.0
+        bmp.scaleY = 1.0
 
         frame1.graphics.beginFill("Black");
         frame1.graphics.moveTo(x-4-12,y-5-1); //(0,0)座標から書き始める
@@ -162,7 +184,7 @@ module.controller('PageController', function($scope, Icon) {
         frame2.graphics.lineTo(x+75+3,y+36+3);
         frame2.graphics.lineTo(x+67+3,y+6-3);
 
-        free.graphics.beginFill(color);
+        free.graphics.beginFill(icon_color[icon]);
         free.graphics.moveTo(x,y); //(0,0)座標から書き始める
         free.graphics.lineTo(x+12,y+46);
         free.graphics.lineTo(x+75,y+36);
@@ -202,6 +224,10 @@ module.controller('PageController', function($scope, Icon) {
         line_ctn.addChild(free);
     }
 
+    function img2path(name) {
+        return "img/"+name+".png"
+    }
+
 
     // ======================================
     //                drawMsg
@@ -226,7 +252,7 @@ module.controller('PageController', function($scope, Icon) {
         // 横の幅．とりまひとつだけ
         // 線の幅．最初だけ上底も下底も決める．
         // 自分の方に行くときは300を基準にする
-        
+
         // とりあえずcontainerを初期化してstageに追加する
         container = new createjs.Container();
         container.rotation = -5;
@@ -273,7 +299,7 @@ module.controller('PageController', function($scope, Icon) {
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50;
-                $scope.drawIcon(lb[0]-10,lb[1]-15, icon,"Pink")
+                $scope.drawIcon(lb[0]-10,lb[1]-15, icon)
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
                 $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White");
                 container.x = lb[0]+50
@@ -314,7 +340,7 @@ module.controller('PageController', function($scope, Icon) {
             }else{
                 // bmp.x = lb[0]-25;
                 var formx = lb[0]+50
-                $scope.drawIcon(lb[0]-10,lb[1]-15,icon,"Pink")
+                $scope.drawIcon(lb[0]-10,lb[1]-15,icon)
                 $scope.drawLeftMsgForm(formx,lb[1]+10);
                 $scope.drawMsg(msg, formx+36, lb[1]-13, -4, "White")
                 container.x = lb[0]+50
@@ -340,10 +366,10 @@ module.controller('PageController', function($scope, Icon) {
         var room = {
             'room': "persona5",
             'user': "an",
-            'icon': $scope.icon.path
+            'icon': $scope.icon.name
         }
         sock.emit('join:room',room)
-        $scope.drawIcon(lb[0]-10,lb[1]-15,"img/system.png","Red")
+        $scope.drawIcon(lb[0]-15,lb[1]-15,"img/system.png")
         $scope.drawLeftMsgForm(lb[0]+50,lb[1]+10);
         $scope.drawMsg("Welcome to P5SNS", lb[0]+83, lb[1]-13, -4, "White");
         container.x = lb[0]+50
@@ -373,7 +399,7 @@ module.controller('PageController', function($scope, Icon) {
             'room': "persona5",
             'user': "an",
             'text': $scope.sended_msg,
-            'icon': $scope.icon.path
+            'icon': $scope.icon.name
         }
         //ほんとはこのあとにメッセージ保存したりする必要あり
         //いまは描画して放置だけど，後々開いたらDBからログ読み込んで再描画みたいな処理も必要そう．
@@ -381,7 +407,7 @@ module.controller('PageController', function($scope, Icon) {
         sock.emit('send:message',msg);
         $scope.sended_msg = ""
 
-        $scope.drawLine(ff,true,msg.text,msg.icon);
+        $scope.drawLine(ff,true,msg.text,img2path(msg.icon));
         ff = false;
         c += 1
         // $scope.drawLeftMsgForm(50,300);
@@ -391,7 +417,7 @@ module.controller('PageController', function($scope, Icon) {
     sock.on('message', function(msg){
         // $scope.messages.push(msg); //送信時と同様
         console.log(msg);
-        $scope.drawLine(ff,false,msg.text,msg.icon);
+        $scope.drawLine(ff,false,msg.text,img2path(msg.icon));
         $scope.$apply()
         ff = false;
         // $scope.$apply(); // 新たなメッセージを確認できるように画面の再描画
@@ -404,5 +430,8 @@ module.controller('PageController', function($scope, Icon) {
     ons.ready(function() {
         // 初期化 ( Init ) 用のコードをここに置きます。
         $scope.enterRoom()
+        setTimeout(function(){
+            $scope.selectIcon($scope.icon.name)
+            },500)
     });
 });

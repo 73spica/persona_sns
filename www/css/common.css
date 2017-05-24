@@ -37,6 +37,10 @@ ul.icon_list li > div {
     transition: all .5s;
     */
 }
+ul.icon_list li > div.active {
+    border :1px solid #111;
+}
+
 ul.icon_list li img.catch {
     width: 100%;
     height: 100%;

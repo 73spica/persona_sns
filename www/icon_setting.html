@@ -1,16 +1,16 @@
 <ons-page ng-controller="PageController">
 <div>
     <ul class="icon_list">
-        <li ng-repeat="value in [1,2,3,4,5,6,7]" ng-click="selectIcon('img/an.png')">
+        <!--<li ng-repeat="value in [1,2,3,4,5,6,7]" ng-click="selectIcon('img/an.png')">
             <div>
                 <img src="img/an.png" class="catch">
             </div>
-        </li>
-        <!--<li ng-repeat="icon in icons track by $index">
-            <div>
-                <img src="{{icon}}" class="catch">
-            </div>
         </li>-->
+        <li ng-repeat="icon in icons track by $index" ng-click="selectIcon(icon)">
+            <div id="{{icon}}">
+                <img src="img/{{icon}}.png" class="catch">
+            </div>
+        </li>
     </ul>
 </div>
 </ons-page>
