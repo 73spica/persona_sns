@@ -7,11 +7,11 @@ _Creating now_
 * createJSとか使ってみたかった
 * 自分のテンションを高める用アプリ
 
-# Prototype
-* プロトタイプ3
+# Overview
+* プロトタイプ3を経てそれっぽくなったバージョン
 * チャット部分をnodejsのsocketioで実装
-* 他メンバーのアイコンつけたり黒線に影付けたり環境によってバグでないようにしたりとやることは多い
+* 複数のキャラアイコンを選べるようにしてみた
 * 画像とか適当に拾ったやつ使ってしまっているので完全に自己満足用です． 
 
-![demo](https://github.com/73spica/persona_sns/blob/master/demo/persona_sns_proto03.gif)
+![demo](https://github.com/73spica/persona_sns/blob/master/demo/persona_sns_proto04.gif)
 
