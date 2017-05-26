@@ -35,7 +35,6 @@ module.controller('PageController', function($scope, Icon) {
 
     // socket使うよ
     // var sock = io.connect("http://localhost:3000")
-    var sock = io.connect("http://27.120.110.171:3000")
 
     //createjsの描画領域の定義
     var container; // drawLineで毎回初期化して使えば良さそう．
